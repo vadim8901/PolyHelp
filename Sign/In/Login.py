@@ -22,11 +22,15 @@ def login(message):
         with connection.cursor() as cursor:
             cursor.execute("""SELECT username, password FROM student.profile WHERE id = """ + str(message_id))
             table = cursor.fetchall()
-            for username, password in table:
-                if username == data[0] and password == data[1]:
-                    bot.send_message(message_id, "Вы успешно вошли!", reply_markup=types.ReplyKeyboardRemove())
-                    bot.send_message(message_id, "Добро пожаловать!", reply_markup=Menu.Menu.student_menu())
-                else:
-                    bot.send_message(message_id, "Введены неверные данные! Либо аккаунт несуществует.")
+            if table is None:
+                bot.send_message(message_id, "Аккаунт не существует!")
+            else:
+                for username, password in table:
+                    if username == data[0] and password == data[1]:
+                        bot.send_message(message_id, "Вы успешно вошли!", reply_markup=types.ReplyKeyboardRemove())
+                        bot.send_message(message_id, "Добро пожаловать!", reply_markup=Menu.Menu.student_menu())
+                    else:
+                        bot.send_message(message_id, "У вас уже есть аккаунт! Забыли логин или пароль?",
+                                         reply_markup=Menu.Menu.forgot_password())
     else:
         bot.send_message(message_id, "Неккоректный ввод!")

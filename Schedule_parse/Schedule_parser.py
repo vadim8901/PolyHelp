@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import requests
+import telebot
 from bs4 import BeautifulSoup
 
+import Config
 from Schedule_parse import Group_parser
 
-URL = str(Group_parser.parse("3530902/90002"))
+
 days = []
 time_subject_info = []
 day_lessons = []
@@ -15,6 +17,8 @@ day_lessons = []
 #       'Time': item.find('div', class_='lesson__subject').get_text(strip=True)
 #   })
 
+#URL = str(Group_parser.parse("3530902/90002", "661902517"))
+bot = telebot.TeleBot(Config.TOKEN, threaded=False)
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                          'Chrome/75.0.3770.100 Safari/537.36',
            'accept': '*/*'}
@@ -59,28 +63,29 @@ def get_content(html):
     return content
 
 
-def parse():
+def parse(group_num, institute, id):
     content = ''
-    i = 0
-    day = 0
-    html = get_html(URL)
-    if html.status_code == 200:
-        content = str(get_content(html.text))
+    URL = str(Group_parser.parse(str(group_num), str(institute)))
+    if URL == 'None':
+        bot.send_message(id, "Неправильный номер группы")
     else:
-        print("errore!")
-    for num in day_lessons:
-        content += str(days[day])
-        content += "\n"
-        while num > 0:
-            temporary = str(time_subject_info[i]).split(',', maxsplit=2)
-            for temp in temporary:
-                content += str(temp) + "\n"
-            i += 1
-            num -= 1
+        i = 0
+        day = 0
+        html = get_html(URL)
+        if html.status_code == 200:
+            content = str(get_content(html.text))
+        else:
+            print("errore!")
+        for num in day_lessons:
+            content += str(days[day])
             content += "\n"
-        day += 1
-        content += "\n"
-    return content
-
-
-parse()
+            while num > 0:
+                temporary = str(time_subject_info[i]).split(',', maxsplit=2)
+                for temp in temporary:
+                    content += str(temp) + "\n"
+                i += 1
+                num -= 1
+                content += "\n"
+            day += 1
+            content += "\n"
+        bot.send_message(id, content)

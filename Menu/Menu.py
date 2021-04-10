@@ -81,6 +81,7 @@ def edit_institute():
     IE = types.InlineKeyboardButton(text="Институт энергетики", callback_data="IE")
     IIMEaT = types.InlineKeyboardButton(text="Институт промышленного менеджмента, экономики и торговли",
                                         callback_data="IIMEaT")
+    back_profile = types.InlineKeyboardButton(text="Назад", callback_data="back_profile_menu")
     main_menu = types.InlineKeyboardButton(text="Главное меню", callback_data="main_menu")
     markup.add(ICaIP)
     markup.row(HI)
@@ -92,6 +93,7 @@ def edit_institute():
     markup.row(CEI)
     markup.row(IE)
     markup.row(IIMEaT)
+    markup.row(back_profile)
     markup.row(main_menu)
     return markup
 
@@ -103,8 +105,10 @@ def edit_course():
     course_three = types.InlineKeyboardButton(text="3", callback_data="three")
     course_four = types.InlineKeyboardButton(text="4", callback_data="four")
     main_menu = types.InlineKeyboardButton(text="Главное меню", callback_data="main_menu")
+    back_profile = types.InlineKeyboardButton(text="Назад", callback_data="back_profile_menu")
     markup.add(course_one, course_two)
     markup.row(course_three, course_four)
+    markup.row(back_profile)
     markup.row(main_menu)
     return markup
 
@@ -174,6 +178,7 @@ def learning_campus_location():
                                           callback_data="IofIMEaT")
     Research_building = types.InlineKeyboardButton(text="Научно-исследовательский корпус ",
                                                    callback_data="Research_building")
+    back_campus = types.InlineKeyboardButton(text="Назад", callback_data="back_campus")
     main_menu = types.InlineKeyboardButton(text="Главное меню", callback_data="main_menu")
     markup.add(Main_educational_building)
     markup.row(Chemical_building_SPBPU)
@@ -201,6 +206,7 @@ def learning_campus_location():
     markup.row(Sports_complex_Polytechnic)
     markup.row(IofIMEaT)
     markup.row(Research_building)
+    markup.row(back_campus)
     markup.row(main_menu)
     return markup
 
@@ -225,6 +231,7 @@ def dorms():
     dorms18 = types.InlineKeyboardButton(text="Общежитие №18", callback_data="dorms18")
     dorms19 = types.InlineKeyboardButton(text="Общежитие №19", callback_data="dorms19")
     dorms20 = types.InlineKeyboardButton(text="Общежитие №20", callback_data="dorms20")
+    back_campus = types.InlineKeyboardButton(text="Назад", callback_data="back_campus")
     main_menu = types.InlineKeyboardButton(text="Главное меню", callback_data="main_menu")
     markup.row(dorms1, dorms3)
     markup.row(dorms4, dorms5)
@@ -235,6 +242,7 @@ def dorms():
     markup.row(dorms15, dorms16)
     markup.row(dorms17, dorms18)
     markup.row(dorms19, dorms20)
+    markup.row(back_campus)
     markup.row(main_menu)
     return markup
 
@@ -252,8 +260,10 @@ def institutes_location():
     phnt = types.InlineKeyboardButton(text="Институт физики, нанотехнологий и телекоммуникаций", callback_data="phnt")
     ifkst = types.InlineKeyboardButton(text="Институт физической культуры, спорта и туризма", callback_data="ifkst")
     iets = types.InlineKeyboardButton(text="Институт энергетики", callback_data="iets")
-    imet = types.InlineKeyboardButton(text="Институт промышленного менеджмента, экономики и торговли", callback_data="imet")
+    imet = types.InlineKeyboardButton(text="Институт промышленного менеджмента, экономики и торговли",
+                                      callback_data="imet")
     iep = types.InlineKeyboardButton(text="Высшая школа международных образовательных программ", callback_data="iep")
+    back_campus = types.InlineKeyboardButton(text="Назад", callback_data="back_campus")
     main_menu = types.InlineKeyboardButton(text="Главное меню", callback_data="main_menu")
     markup.row(hum)
     markup.row(ice)
@@ -268,6 +278,7 @@ def institutes_location():
     markup.row(iets)
     markup.row(imet)
     markup.row(iep)
+    markup.row(back_campus)
     markup.row(main_menu)
     return markup
 

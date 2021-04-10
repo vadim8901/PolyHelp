@@ -18,8 +18,7 @@ def get_html(url, params=None):
 def get_content(html, institute):
     url = ''
     soup = BeautifulSoup(html, 'html.parser')
-    items = soup.find('a', class_='faculty-list__link', text=institute).get(
-        'href')
+    items = soup.find('a', class_='faculty-list__link', text=str(institute)).get('href')
     for item in items:
         url += str(item)
     return url

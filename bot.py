@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import pymysql
 import telebot
 
 import Config
+from Profile import Group
 from Menu import Menu
 import Sign.Up.Register
 import Sign.In.Login
@@ -288,8 +290,26 @@ def forgot_log_pas(call):
                                              "%s\ncourse: %s\ngroup: %s" % (
                                      lang, institute, course, group_number), reply_markup=Menu.edit_course())
             connection.commit()
-    # elif call.data == 'edit_group_number':  # Редактировать номер группы
+    elif call.data == 'edit_group_number':  # Редактировать номер группы
+        bot.delete_message(
+            chat_id=message_id, message_id=call.message.message_id
+        )
+        send = bot.send_message(message_id, "Введите номер группы, писать точный номер группы(для нормального "
+                                            "функционирования бота\nНапример 3530902/90002")
+        bot.register_next_step_handler(send, Group.write_group)
     # elif call.data == 'edit_language':  # Редактировать язык
+    elif call.data == 'back_profile_menu':
+        bot.delete_message(
+            chat_id=message_id, message_id=call.message.message_id
+        )
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT lang, institute, course, group_number FROM student.profile WHERE id = """ + str(message_id))
+            table = cursor.fetchall()
+            for lang, institute, course, group_number in table:
+                bot.send_message(message_id, "Ваш профиль:\nlanguage: %s\ninstitute: "
+                                             "%s\ncourse: %s\ngroup: %s" % (
+                                     lang, institute, course, group_number), reply_markup=Menu.edit_profile())
     elif call.data == 'campus_location':  # Меню кампуса(выбор(учебный корпус, общежитие))
         bot.delete_message(
             chat_id=message_id, message_id=call.message.message_id
@@ -450,16 +470,27 @@ def forgot_log_pas(call):
     elif call.data == 'iep':
         bot.send_message(message_id, "📞 +7(812)6066220\n📍 Гражданский проспект, 28, каб. 221")
         bot.send_location(message_id, 60.007302, 30.390336)
+    elif call.data == 'back_campus':
+        bot.delete_message(
+            chat_id=message_id, message_id=call.message.message_id
+        )
+        bot.send_message(message_id, "Выберите:", reply_markup=Menu.campus())
     elif call.data == 'schedule':  # Расписание
         with connection.cursor() as cursor:
             cursor.execute("""SELECT institute FROM student.profile WHERE id = """ + str(message_id))
             student_institute = cursor.fetchone()
             cursor.execute("""SELECT group_number FROM student.profile WHERE id = """ + str(message_id))
             student_group_num = cursor.fetchone()
-            if not (student_institute is None) or not (student_group_num is None):
+            if (student_institute is None) or (student_group_num is None):
                 bot.send_message(message_id, "Заполните профиль!")
             else:
-                bot.send_message(message_id, Schedule_parser.parse())
+                group_num = ""
+                institute = ""
+                for group in student_group_num:
+                    group_num = group
+                for inst in student_institute:
+                    institute = inst
+                Schedule_parser.parse(group_num, institute, message_id)
     elif call.data == 'main_menu':  # Главное меню
         bot.delete_message(
             chat_id=message_id, message_id=call.message.message_id
